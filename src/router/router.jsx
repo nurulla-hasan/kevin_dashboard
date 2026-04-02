@@ -31,6 +31,10 @@ import Notification from "../pages/Notification/Notification";
 import PrivetRoutes from "./PrivetRoute";
 import DocVerify from "../pages/DocVerify/DocVerify";
 import Signin from "../pages/SignIn/Signin";
+import CMS from "../pages/CMS/CMS";
+import CMSHome from "../pages/CMS/CMSHome";
+import CMSAbout from "../pages/CMS/CMSAbout";
+import CMSContact from "../pages/CMS/CMSContact";
 
 const router = createBrowserRouter([
   {
@@ -118,6 +122,22 @@ const router = createBrowserRouter([
       {
         path: "/feedback/reply",
         element: <Reply/>,
+      },
+      {
+        path: "/cms",
+        element: <CMS/>,
+      },
+      {
+        path: "/cms/home",
+        element: <CMSHome/>,
+      },
+      {
+        path: "/cms/about",
+        element: <CMSAbout/>,
+      },
+      {
+        path: "/cms/contact",
+        element: <CMSContact/>,
       },
       {
         path: "/setting/updateProfile",
