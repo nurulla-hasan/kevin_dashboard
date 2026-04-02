@@ -35,6 +35,7 @@ import CMS from "../pages/CMS/CMS";
 import CMSHome from "../pages/CMS/CMSHome";
 import CMSAbout from "../pages/CMS/CMSAbout";
 import CMSContact from "../pages/CMS/CMSContact";
+import CMSGlobal from "../pages/CMS/CMSGlobal";
 
 const router = createBrowserRouter([
   {
@@ -138,6 +139,10 @@ const router = createBrowserRouter([
       {
         path: "/cms/contact",
         element: <CMSContact/>,
+      },
+      {
+        path: "/cms/global",
+        element: <CMSGlobal/>,
       },
       {
         path: "/setting/updateProfile",
