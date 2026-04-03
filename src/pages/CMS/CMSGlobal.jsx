@@ -13,7 +13,7 @@ import { SaveOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   useGetCmsNavFooterDataQuery,
   useUpdateCmsNavFooterDataMutation,
-} from "../../redux/feature/cms/navFooterApi";
+} from "../../redux/feature/cms/global";
 
 const defaultNavigation = [
   { label: "Home", isVisible: true },
