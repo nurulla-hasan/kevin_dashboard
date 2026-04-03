@@ -46,8 +46,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const cmsRoutes = [
     { path: "/cms/home", label: "Home", icon: <RxDashboard className="w-5 h-5" /> },
-    { path: "/cms/about", label: "About", icon: <FaUsers className="w-5 h-5" /> },
-    { path: "/cms/contact", label: "Contact", icon: <VscFeedback className="w-5 h-5" /> },
     { path: "/cms/global", label: "Global Settings", icon: <IoMdSettings className="w-5 h-5" /> },
   ];
 

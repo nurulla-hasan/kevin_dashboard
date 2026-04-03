@@ -33,8 +33,6 @@ import DocVerify from "../pages/DocVerify/DocVerify";
 import Signin from "../pages/SignIn/Signin";
 import CMS from "../pages/CMS/CMS";
 import CMSHome from "../pages/CMS/CMSHome";
-import CMSAbout from "../pages/CMS/CMSAbout";
-import CMSContact from "../pages/CMS/CMSContact";
 import CMSGlobal from "../pages/CMS/CMSGlobal";
 
 const router = createBrowserRouter([
@@ -131,14 +129,6 @@ const router = createBrowserRouter([
       {
         path: "/cms/home",
         element: <CMSHome/>,
-      },
-      {
-        path: "/cms/about",
-        element: <CMSAbout/>,
-      },
-      {
-        path: "/cms/contact",
-        element: <CMSContact/>,
       },
       {
         path: "/cms/global",
