@@ -15,7 +15,7 @@ import Message from "../pages/Message/Message";
 import Flag from "../pages/Flag/Flag";
 import Membership from "../pages/Membership/Membership";
 import ManageFees from "../pages/ManageFees/ManageFees";
-import Earnings from "../pages/Earnings/Earnings";
+// import Earnings from "../pages/Earnings/Earnings";
 import ManagePlatformFee from "../pages/ManagePlatformFee/ManagePlatformFee";
 import Categories from "../pages/Categories/Categories";
 import Blogs from "../pages/Blogs/Blogs";
@@ -34,6 +34,13 @@ import Signin from "../pages/SignIn/Signin";
 import CMS from "../pages/CMS/CMS";
 import CMSHome from "../pages/CMS/CMSHome";
 import CMSGlobal from "../pages/CMS/CMSGlobal";
+import CMSInterior from "../pages/CMS/CMSInterior";
+import CMSExterior from "../pages/CMS/CMSExterior";
+import CMSLawnGarden from "../pages/CMS/CMSLawnGarden";
+import CMSSpecialized from "../pages/CMS/CMSSpecialized";
+import CMSArticles from "../pages/CMS/CMSArticles";
+import CMSReferral from "../pages/CMS/CMSReferral";
+import CMSMembership from "../pages/CMS/CMSMembership";
 
 const router = createBrowserRouter([
   {
@@ -133,6 +140,34 @@ const router = createBrowserRouter([
       {
         path: "/cms/global",
         element: <CMSGlobal/>,
+      },
+      {
+        path: "/cms/interior",
+        element: <CMSInterior/>,
+      },
+      {
+        path: "/cms/exterior",
+        element: <CMSExterior/>,
+      },
+      {
+        path: "/cms/lawn-garden",
+        element: <CMSLawnGarden/>,
+      },
+      {
+        path: "/cms/specialized",
+        element: <CMSSpecialized/>,
+      },
+      {
+        path: "/cms/articles",
+        element: <CMSArticles/>,
+      },
+      {
+        path: "/cms/referral",
+        element: <CMSReferral/>,
+      },
+      {
+        path: "/cms/membership",
+        element: <CMSMembership/>,
       },
       {
         path: "/setting/updateProfile",

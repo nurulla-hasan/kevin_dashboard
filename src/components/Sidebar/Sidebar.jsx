@@ -47,6 +47,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const cmsRoutes = [
     { path: "/cms/home", label: "Home", icon: <RxDashboard className="w-5 h-5" /> },
     { path: "/cms/global", label: "Global Settings", icon: <IoMdSettings className="w-5 h-5" /> },
+    { path: "/cms/interior", label: "Interior", icon: <MdCategory className="w-5 h-5" /> },
+    { path: "/cms/exterior", label: "Exterior", icon: <MdCategory className="w-5 h-5" /> },
+    { path: "/cms/lawn-garden", label: "Lawn & Garden", icon: <MdCategory className="w-5 h-5" /> },
+    { path: "/cms/specialized", label: "Specialized & Other", icon: <MdCategory className="w-5 h-5" /> },
+    { path: "/cms/articles", label: "Articles", icon: <TbLogs className="w-5 h-5" /> },
+    { path: "/cms/referral", label: "Referral", icon: <FaUsers className="w-5 h-5" /> },
+    { path: "/cms/membership", label: "Membership", icon: <SlBadge className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => {
