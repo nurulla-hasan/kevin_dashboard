@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -10,10 +10,15 @@ import {
   Upload,
 } from "antd";
 import { SaveOutlined, UploadOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useGetMembershipQuery, useUpdateMembershipMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSMembership = () => {
   const [activeTab, setActiveTab] = useState("hero");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: membershipDataFromApi, isLoading: isFetching } = useGetMembershipQuery();
+  const [updateMembership, { isLoading: isUpdating }] = useUpdateMembershipMutation();
 
   const [mainImage, setMainImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -61,14 +66,20 @@ const CMSMembership = () => {
     }
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (membershipDataFromApi?.sections) {
+      setSections(membershipDataFromApi.sections);
+    }
+    if (membershipDataFromApi?.image) {
+      setImageUrl(membershipDataFromApi.image);
+    }
+  }, [membershipDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      
-      // Auto logic: if image exists, isLogo is true, otherwise false
-      const isLogo = !!mainImage;
+      // Auto logic: if image exists (either selected or already from API), isLogo is true
+      const isLogo = !!mainImage || !!imageUrl;
 
       const formData = new FormData();
       formData.append("isLogo", isLogo.toString());
@@ -77,18 +88,10 @@ const CMSMembership = () => {
       }
       formData.append("data", JSON.stringify({ sections }));
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Membership Data (Payload structure):", {
-        isLogo,
-        image: mainImage,
-        data: { sections }
-      });
-      messageApi.success("Membership settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save membership settings");
-    } finally {
-      setIsLoading(false);
+      await updateMembership(formData).unwrap();
+      messageApi.success("Membership settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update membership settings");
     }
   };
 
@@ -202,6 +205,14 @@ const CMSMembership = () => {
     </div>
   );
 
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       {contextHolder}
@@ -313,7 +324,7 @@ const CMSMembership = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >

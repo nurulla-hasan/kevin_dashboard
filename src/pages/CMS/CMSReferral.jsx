@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -9,10 +9,15 @@ import {
   message,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { useGetReferralQuery, useUpdateReferralMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSReferral = () => {
   const [activeTab, setActiveTab] = useState("hero");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: referralDataFromApi, isLoading: isFetching } = useGetReferralQuery();
+  const [updateReferral, { isLoading: isUpdating }] = useUpdateReferralMutation();
 
   const [referralData, setReferralData] = useState({
     hero: {
@@ -27,21 +32,33 @@ const CMSReferral = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (referralDataFromApi?.sections) {
+      setReferralData(referralDataFromApi.sections);
+    }
+  }, [referralDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Referral Data:", referralData);
-      messageApi.success("Referral settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save referral settings");
-    } finally {
-      setIsLoading(false);
+      const payload = {
+        data: JSON.stringify({ sections: referralData })
+      };
+
+      await updateReferral(payload).unwrap();
+      messageApi.success("Referral settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update referral settings");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -173,7 +190,7 @@ const CMSReferral = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >

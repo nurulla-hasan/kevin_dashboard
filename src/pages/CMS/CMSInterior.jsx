@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -9,10 +9,15 @@ import {
   message,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { useGetInteriorQuery, useUpdateInteriorMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSInterior = () => {
   const [activeTab, setActiveTab] = useState("banner");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: interiorDataFromApi, isLoading: isFetching } = useGetInteriorQuery();
+  const [updateInterior, { isLoading: isUpdating }] = useUpdateInteriorMutation();
 
   const [interiorData, setInteriorData] = useState({
     banner: {
@@ -25,21 +30,33 @@ const CMSInterior = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (interiorDataFromApi?.sections) {
+      setInteriorData(interiorDataFromApi.sections);
+    }
+  }, [interiorDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Interior Data:", interiorData);
-      messageApi.success("Interior settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save interior settings");
-    } finally {
-      setIsLoading(false);
+      const payload = {
+        data: JSON.stringify({ sections: interiorData })
+      };
+
+      await updateInterior(payload).unwrap();
+      messageApi.success("Interior settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update interior settings");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -136,7 +153,7 @@ const CMSInterior = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >

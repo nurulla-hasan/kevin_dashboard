@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -9,10 +9,15 @@ import {
   message,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { useGetArticlesQuery, useUpdateArticlesMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSArticles = () => {
   const [activeTab, setActiveTab] = useState("featured");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: articlesDataFromApi, isLoading: isFetching } = useGetArticlesQuery();
+  const [updateArticles, { isLoading: isUpdating }] = useUpdateArticlesMutation();
 
   const [articlesData, setArticlesData] = useState({
     featured: {
@@ -31,21 +36,33 @@ const CMSArticles = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (articlesDataFromApi?.sections) {
+      setArticlesData(articlesDataFromApi.sections);
+    }
+  }, [articlesDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Articles Data:", articlesData);
-      messageApi.success("Articles settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save articles settings");
-    } finally {
-      setIsLoading(false);
+      const payload = {
+        data: JSON.stringify({ sections: articlesData })
+      };
+
+      await updateArticles(payload).unwrap();
+      messageApi.success("Articles settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update articles settings");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -212,7 +229,7 @@ const CMSArticles = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >

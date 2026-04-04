@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -9,10 +9,15 @@ import {
   message,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { useGetLawnGardenQuery, useUpdateLawnGardenMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSLawnGarden = () => {
   const [activeTab, setActiveTab] = useState("banner");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: lawnGardenDataFromApi, isLoading: isFetching } = useGetLawnGardenQuery();
+  const [updateLawnGarden, { isLoading: isUpdating }] = useUpdateLawnGardenMutation();
 
   const [lawnGardenData, setLawnGardenData] = useState({
     banner: {
@@ -25,21 +30,33 @@ const CMSLawnGarden = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (lawnGardenDataFromApi?.sections) {
+      setLawnGardenData(lawnGardenDataFromApi.sections);
+    }
+  }, [lawnGardenDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Lawn & Garden Data:", lawnGardenData);
-      messageApi.success("Lawn & Garden settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save lawn & garden settings");
-    } finally {
-      setIsLoading(false);
+      const payload = {
+        data: JSON.stringify({ sections: lawnGardenData })
+      };
+
+      await updateLawnGarden(payload).unwrap();
+      messageApi.success("Lawn & Garden settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update lawn & garden settings");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -136,7 +153,7 @@ const CMSLawnGarden = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >

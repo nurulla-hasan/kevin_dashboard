@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -9,10 +9,15 @@ import {
   message,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { useGetSpecializedQuery, useUpdateSpecializedMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSSpecialized = () => {
   const [activeTab, setActiveTab] = useState("banner");
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Redux hooks
+  const { data: specializedDataFromApi, isLoading: isFetching } = useGetSpecializedQuery();
+  const [updateSpecialized, { isLoading: isUpdating }] = useUpdateSpecializedMutation();
 
   const [specializedData, setSpecializedData] = useState({
     banner: {
@@ -25,21 +30,33 @@ const CMSSpecialized = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Load data from API when available
+  useEffect(() => {
+    if (specializedDataFromApi?.sections) {
+      setSpecializedData(specializedDataFromApi.sections);
+    }
+  }, [specializedDataFromApi]);
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Saving Specialized Data:", specializedData);
-      messageApi.success("Specialized services settings saved successfully!");
-    } catch {
-      messageApi.error("Failed to save specialized services settings");
-    } finally {
-      setIsLoading(false);
+      const payload = {
+        data: JSON.stringify({ sections: specializedData })
+      };
+
+      await updateSpecialized(payload).unwrap();
+      messageApi.success("Specialized services settings updated successfully!");
+    } catch (error) {
+      messageApi.error(error?.data?.message || "Failed to update specialized services settings");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -136,7 +153,7 @@ const CMSSpecialized = () => {
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            loading={isLoading}
+            loading={isUpdating}
             onClick={handleSave}
             className="bg-[#1D69E1] hover:bg-[#164FA9] h-10 px-8 rounded-lg"
           >
