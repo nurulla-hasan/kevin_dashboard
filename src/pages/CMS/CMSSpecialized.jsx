@@ -12,7 +12,7 @@ import { SaveOutlined } from "@ant-design/icons";
 import { useGetSpecializedQuery, useUpdateSpecializedMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSSpecialized = () => {
-  const [activeTab, setActiveTab] = useState("banner");
+  const [activeTab, setActiveTab] = useState("projects");
   const [messageApi, contextHolder] = message.useMessage();
 
   // Redux hooks
@@ -71,44 +71,44 @@ const CMSSpecialized = () => {
           activeKey={activeTab}
           onChange={setActiveTab}
           items={[
-            {
-              key: "banner",
-              label: "Banner Section",
-              children: (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <label className="text-lg font-semibold">Banner Visibility</label>
-                    <Switch
-                      checked={specializedData.banner.isVisible}
-                      onChange={(checked) => 
-                        setSpecializedData(prev => ({ 
-                          ...prev, 
-                          banner: { ...prev.banner, isVisible: checked } 
-                        }))
-                      }
-                    />
-                  </div>
+            // {
+            //   key: "banner",
+            //   label: "Banner Section",
+            //   children: (
+            //     <div className="space-y-6">
+            //       <div className="flex items-center justify-between">
+            //         <label className="text-lg font-semibold">Banner Visibility</label>
+            //         <Switch
+            //           checked={specializedData.banner.isVisible}
+            //           onChange={(checked) => 
+            //             setSpecializedData(prev => ({ 
+            //               ...prev, 
+            //               banner: { ...prev.banner, isVisible: checked } 
+            //             }))
+            //           }
+            //         />
+            //       </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Banner Title
-                    </label>
-                    <Input.TextArea
-                      value={specializedData.banner.title}
-                      onChange={(e) => 
-                        setSpecializedData(prev => ({ 
-                          ...prev, 
-                          banner: { ...prev.banner, title: e.target.value } 
-                        }))
-                      }
-                      rows={3}
-                      placeholder="Enter banner title"
-                      className="max-w-2xl"
-                    />
-                  </div>
-                </div>
-              ),
-            },
+            //       <div>
+            //         <label className="block text-sm font-medium text-gray-700 mb-2">
+            //           Banner Title
+            //         </label>
+            //         <Input.TextArea
+            //           value={specializedData.banner.title}
+            //           onChange={(e) => 
+            //             setSpecializedData(prev => ({ 
+            //               ...prev, 
+            //               banner: { ...prev.banner, title: e.target.value } 
+            //             }))
+            //           }
+            //           rows={3}
+            //           placeholder="Enter banner title"
+            //           className="max-w-2xl"
+            //         />
+            //       </div>
+            //     </div>
+            //   ),
+            // },
             {
               key: "projects",
               label: "Projects Section",
