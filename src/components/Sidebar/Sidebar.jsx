@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaRegBookmark, FaUsers, FaFileAlt } from "react-icons/fa";
+import { FaRegBookmark, FaUsers, FaFileAlt, FaHardHat } from "react-icons/fa";
 import { IoMdInformationCircleOutline, IoMdSettings } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
-import { MdCategory, MdOutlinePrivacyTip } from "react-icons/md";
+import { MdCategory, MdOutlinePrivacyTip, MdHomeWork, MdHouseSiding, MdYard, MdHandyman, MdHome } from "react-icons/md";
 import { SlArrowDown, SlBadge } from "react-icons/sl";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { useState } from "react";
@@ -45,16 +45,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   ];
 
   const cmsRoutes = [
-    { path: "/cms/home", label: "Home", icon: <RxDashboard className="w-5 h-5" /> },
+    { path: "/cms/home", label: "Home", icon: <MdHome className="w-5 h-5" /> },
     { path: "/cms/global", label: "Global Settings", icon: <IoMdSettings className="w-5 h-5" /> },
-    { path: "/cms/interior", label: "Interior", icon: <MdCategory className="w-5 h-5" /> },
-    { path: "/cms/exterior", label: "Exterior", icon: <MdCategory className="w-5 h-5" /> },
-    { path: "/cms/lawn-garden", label: "Lawn & Garden", icon: <MdCategory className="w-5 h-5" /> },
-    { path: "/cms/specialized", label: "Specialized & Other", icon: <MdCategory className="w-5 h-5" /> },
+    { path: "/cms/interior", label: "Interior", icon: <MdHomeWork className="w-5 h-5" /> },
+    { path: "/cms/exterior", label: "Exterior", icon: <MdHouseSiding className="w-5 h-5" /> },
+    { path: "/cms/lawn-garden", label: "Lawn & Garden", icon: <MdYard className="w-5 h-5" /> },
+    { path: "/cms/specialized", label: "Specialized & Other", icon: <MdHandyman className="w-5 h-5" /> },
     { path: "/cms/articles", label: "Articles", icon: <TbLogs className="w-5 h-5" /> },
     { path: "/cms/referral", label: "Referral", icon: <FaUsers className="w-5 h-5" /> },
     { path: "/cms/membership", label: "Membership", icon: <SlBadge className="w-5 h-5" /> },
-    { path: "/cms/vip-contractor", label: "VIP Contractor", icon: <FaUsers className="w-5 h-5" /> },
+    { path: "/cms/vip-contractor", label: "VIP Contractor", icon: <FaHardHat className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => {
