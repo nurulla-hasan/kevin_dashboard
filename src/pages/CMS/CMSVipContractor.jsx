@@ -10,15 +10,15 @@ import {
   Upload,
 } from "antd";
 import { SaveOutlined, UploadOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useGetMembershipQuery, useUpdateMembershipMutation } from "../../redux/feature/cms/cmsApi";
+import { useGetVipContractorQuery, useUpdateVipContractorMutation } from "../../redux/feature/cms/cmsApi";
 
-const CMSMembership = () => {
+const CMSVipContractor = () => {
   const [activeTab, setActiveTab] = useState("hero");
   const [messageApi, contextHolder] = message.useMessage();
 
   // Redux hooks
-  const { data: membershipDataFromApi, isLoading: isFetching } = useGetMembershipQuery();
-  const [updateMembership, { isLoading: isUpdating }] = useUpdateMembershipMutation();
+  const { data: vipContractorDataFromApi, isLoading: isFetching } = useGetVipContractorQuery();
+  const [updateVipContractor, { isLoading: isUpdating }] = useUpdateVipContractorMutation();
 
   const [mainImage, setMainImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -26,42 +26,42 @@ const CMSMembership = () => {
 
   const [sections, setSections] = useState({
     hero: {
-      title: "Choose Your Membership. Power Up Your Projects.",
-      content: "Whether you're hiring a trusted tradesperson or getting hands-on with your own DIY repairs, YTS gives you the tools, knowledge, and professionals you need – all in one place.",
+      title: "Hire Top-Rated VIP Contractors",
+      content: "Connect with our exclusive network of verified VIP contractors for premium home services.",
       isVisible: true,
     },
     upgradeText: {
-      title: "✨ Start Free, or upgrade for more:",
+      title: "✨ Upgrade your experience:",
       isVisible: true,
     },
     cardFree: {
-      title: "20% Off Pre-Priced Projects",
+      title: "Standard Access",
       features: [
-        "Access to contractor listings",
-        "Post job requests",
-        "Basic DIY tips"
+        "Browse contractor listings",
+        "Basic contractor profiles",
+        "Standard booking options"
       ],
       isVisible: true,
     },
     cardPremium: {
-      title: "Premium",
-      content: "$9.99/month or $99/year",
+      title: "Premium Contractor Access",
+      content: "Priority matching with top-rated professionals",
       features: [
         "Priority contractor matching",
-        "Advanced tutorials & webinars",
-        "Discounts on tools & products",
+        "Verified contractor badges",
+        "Faster response times",
         "Dedicated support"
       ],
       isVisible: true,
     },
     cardVip: {
-      title: "VIP",
-      content: "$24.99/month or $249/year",
+      title: "VIP Contractor Access",
+      content: "Exclusive access to elite contractors",
       features: [
         "All Premium benefits",
-        "Access to VIP-only contractors",
-        "Free annual home consultation",
-        "Early access + VIP event invites"
+        "VIP-only contractors",
+        "Same-day service availability",
+        "White-glove service guarantee"
       ],
       isVisible: true,
     }
@@ -78,13 +78,13 @@ const CMSMembership = () => {
 
   // Load data from API when available
   useEffect(() => {
-    if (membershipDataFromApi?.sections) {
-      setSections(membershipDataFromApi.sections);
+    if (vipContractorDataFromApi?.sections) {
+      setSections(vipContractorDataFromApi.sections);
     }
-    if (membershipDataFromApi?.image) {
-      setImageUrl(membershipDataFromApi.image);
+    if (vipContractorDataFromApi?.image) {
+      setImageUrl(vipContractorDataFromApi.image);
     }
-  }, [membershipDataFromApi]);
+  }, [vipContractorDataFromApi]);
 
   const handleSave = async () => {
     try {
@@ -98,10 +98,10 @@ const CMSMembership = () => {
       }
       formData.append("data", JSON.stringify({ sections }));
 
-      await updateMembership(formData).unwrap();
-      messageApi.success("Membership settings updated successfully!");
+      await updateVipContractor(formData).unwrap();
+      messageApi.success("VIP Contractor settings updated successfully!");
     } catch (error) {
-      messageApi.error(error?.data?.message || "Failed to update membership settings");
+      messageApi.error(error?.data?.message || "Failed to update VIP Contractor settings");
     }
   };
 
@@ -150,10 +150,10 @@ const CMSMembership = () => {
         <label className="text-lg font-semibold">{label} Visibility</label>
         <Switch
           checked={sections[sectionKey].isVisible}
-          onChange={(checked) =>
-            setSections(prev => ({
-              ...prev,
-              [sectionKey]: { ...prev[sectionKey], isVisible: checked }
+          onChange={(checked) => 
+            setSections(prev => ({ 
+              ...prev, 
+              [sectionKey]: { ...prev[sectionKey], isVisible: checked } 
             }))
           }
         />
@@ -163,10 +163,10 @@ const CMSMembership = () => {
         <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
         <Input
           value={sections[sectionKey].title}
-          onChange={(e) =>
-            setSections(prev => ({
-              ...prev,
-              [sectionKey]: { ...prev[sectionKey], title: e.target.value }
+          onChange={(e) => 
+            setSections(prev => ({ 
+              ...prev, 
+              [sectionKey]: { ...prev[sectionKey], title: e.target.value } 
             }))
           }
           className="max-w-2xl"
@@ -178,10 +178,10 @@ const CMSMembership = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
           <Input.TextArea
             value={sections[sectionKey].content}
-            onChange={(e) =>
-              setSections(prev => ({
-                ...prev,
-                [sectionKey]: { ...prev[sectionKey], content: e.target.value }
+            onChange={(e) => 
+              setSections(prev => ({ 
+                ...prev, 
+                [sectionKey]: { ...prev[sectionKey], content: e.target.value } 
               }))
             }
             rows={3}
@@ -201,16 +201,16 @@ const CMSMembership = () => {
                   onChange={(e) => handleFeatureChange(sectionKey, index, e.target.value)}
                   placeholder={`Feature ${index + 1}`}
                 />
-                <Button
-                  danger
-                  icon={<DeleteOutlined />}
+                <Button 
+                  danger 
+                  icon={<DeleteOutlined />} 
                   onClick={() => removeFeature(sectionKey, index)}
                 />
               </div>
             ))}
-            <Button
-              type="dashed"
-              icon={<PlusOutlined />}
+            <Button 
+              type="dashed" 
+              icon={<PlusOutlined />} 
               onClick={() => addFeature(sectionKey)}
               className="w-full"
             >
@@ -234,8 +234,8 @@ const CMSMembership = () => {
     <div className="p-6">
       {contextHolder}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Membership Management</h1>
-        <p className="text-gray-600">Manage membership sections, plans, and features</p>
+        <h1 className="text-2xl font-bold text-gray-800">VIP Contractor Management</h1>
+        <p className="text-gray-600">Manage VIP contractor sections, plans, and features</p>
       </div>
 
       {/* Image Upload Card (Logic handles isLogo automatically) - COMMENTED OUT
@@ -300,10 +300,10 @@ const CMSMembership = () => {
                     <label className="text-lg font-semibold">Upgrade Text Visibility</label>
                     <Switch
                       checked={sections.upgradeText.isVisible}
-                      onChange={(checked) =>
-                        setSections(prev => ({
-                          ...prev,
-                          upgradeText: { ...prev.upgradeText, isVisible: checked }
+                      onChange={(checked) => 
+                        setSections(prev => ({ 
+                          ...prev, 
+                          upgradeText: { ...prev.upgradeText, isVisible: checked } 
                         }))
                       }
                     />
@@ -312,10 +312,10 @@ const CMSMembership = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
                     <Input
                       value={sections.upgradeText.title}
-                      onChange={(e) =>
-                        setSections(prev => ({
-                          ...prev,
-                          upgradeText: { ...prev.upgradeText, title: e.target.value }
+                      onChange={(e) => 
+                        setSections(prev => ({ 
+                          ...prev, 
+                          upgradeText: { ...prev.upgradeText, title: e.target.value } 
                         }))
                       }
                       className="max-w-2xl"
@@ -358,4 +358,4 @@ const CMSMembership = () => {
   );
 };
 
-export default CMSMembership;
+export default CMSVipContractor;

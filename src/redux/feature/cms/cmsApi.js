@@ -127,6 +127,24 @@ const cmsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["membership"],
     }),
+
+    // VIP Contractor
+    getVipContractor: builder.query({
+      query: () => ({
+        url: "/cms/vip-contractor",
+        method: "GET",
+      }),
+      transformResponse: (response) => response?.data,
+      providesTags: ["vip-contractor"],
+    }),
+    updateVipContractor: builder.mutation({
+      query: (body) => ({
+        url: "/cms/vip-contractor",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["vip-contractor"],
+    }),
   }),
 });
 
@@ -145,4 +163,6 @@ export const {
   useUpdateReferralMutation,
   useGetMembershipQuery,
   useUpdateMembershipMutation,
+  useGetVipContractorQuery,
+  useUpdateVipContractorMutation,
 } = cmsApi;

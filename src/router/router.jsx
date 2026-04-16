@@ -41,6 +41,7 @@ import CMSSpecialized from "../pages/CMS/CMSSpecialized";
 import CMSArticles from "../pages/CMS/CMSArticles";
 import CMSReferral from "../pages/CMS/CMSReferral";
 import CMSMembership from "../pages/CMS/CMSMembership";
+import CMSVipContractor from "../pages/CMS/CMSVipContractor";
 
 const router = createBrowserRouter([
   {
@@ -168,6 +169,10 @@ const router = createBrowserRouter([
       {
         path: "/cms/membership",
         element: <CMSMembership/>,
+      },
+      {
+        path: "/cms/vip-contractor",
+        element: <CMSVipContractor/>,
       },
       {
         path: "/setting/updateProfile",

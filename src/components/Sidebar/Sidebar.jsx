@@ -54,6 +54,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { path: "/cms/articles", label: "Articles", icon: <TbLogs className="w-5 h-5" /> },
     { path: "/cms/referral", label: "Referral", icon: <FaUsers className="w-5 h-5" /> },
     { path: "/cms/membership", label: "Membership", icon: <SlBadge className="w-5 h-5" /> },
+    { path: "/cms/vip-contractor", label: "VIP Contractor", icon: <FaUsers className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => {
