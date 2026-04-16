@@ -7,8 +7,9 @@ import {
   Card,
   Spin,
   message,
+  Upload,
 } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useGetReferralQuery, useUpdateReferralMutation } from "../../redux/feature/cms/cmsApi";
 
 const CMSReferral = () => {
@@ -32,23 +33,41 @@ const CMSReferral = () => {
     },
   });
 
+  const [heroImage, setHeroImage] = useState(null);
+  const [heroImageUrl, setHeroImageUrl] = useState("");
+
   // Load data from API when available
   useEffect(() => {
     if (referralDataFromApi?.sections) {
       setReferralData(referralDataFromApi.sections);
     }
+    if (referralDataFromApi?.sections?.hero?.image) {
+      setHeroImageUrl(referralDataFromApi.sections.hero.image);
+    }
   }, [referralDataFromApi]);
 
   const handleSave = async () => {
     try {
-      const payload = {
-        data: JSON.stringify({ sections: referralData })
-      };
+      const formData = new FormData();
+      formData.append("sectionPath", "hero");
+      formData.append("data", JSON.stringify({ sections: referralData }));
+      if (heroImage) {
+        formData.append("image", heroImage);
+      }
 
-      await updateReferral(payload).unwrap();
+      await updateReferral(formData).unwrap();
       messageApi.success("Referral settings updated successfully!");
+      setHeroImage(null);
     } catch (error) {
       messageApi.error(error?.data?.message || "Failed to update referral settings");
+    }
+  };
+
+  const handleHeroImageUpload = (info) => {
+    if (info.file.status === "done") {
+      setHeroImage(info.file.originFileObj);
+      setHeroImageUrl(URL.createObjectURL(info.file.originFileObj));
+      messageApi.success("Image selected successfully!");
     }
   };
 
@@ -124,6 +143,49 @@ const CMSReferral = () => {
                       placeholder="Enter hero content"
                       className="max-w-2xl"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hero Image
+                    </label>
+                    {!heroImageUrl ? (
+                      <Upload
+                        accept="image/*"
+                        showUploadList={false}
+                        customRequest={({ onSuccess }) => {
+                          setTimeout(() => {
+                            onSuccess("ok");
+                          }, 500);
+                        }}
+                        onChange={handleHeroImageUpload}
+                      >
+                        <Button icon={<UploadOutlined />}>Select Image</Button>
+                      </Upload>
+                    ) : (
+                      <div className="flex items-center justify-between p-3 border rounded-lg bg-white">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={heroImageUrl}
+                            alt="Hero"
+                            className="h-10 w-10 object-contain rounded cursor-pointer hover:opacity-80"
+                            onClick={() => window.open(heroImageUrl, "_blank")}
+                          />
+                          <span className="text-sm text-gray-700 truncate max-w-[200px]">
+                            {heroImage?.name || "image.png"}
+                          </span>
+                        </div>
+                        <Button
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => {
+                            setHeroImage(null);
+                            setHeroImageUrl("");
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ),
