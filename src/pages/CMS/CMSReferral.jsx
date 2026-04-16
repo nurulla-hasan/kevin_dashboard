@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   Tabs,
@@ -35,6 +35,17 @@ const CMSReferral = () => {
 
   const [heroImage, setHeroImage] = useState(null);
   const [heroImageUrl, setHeroImageUrl] = useState("");
+  const [deletedImage, setDeletedImage] = useState(false);
+  const objectUrlRef = useRef(null);
+
+  // Cleanup object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
 
   // Load data from API when available
   useEffect(() => {
@@ -51,6 +62,7 @@ const CMSReferral = () => {
       const formData = new FormData();
       formData.append("sectionPath", "hero");
       formData.append("data", JSON.stringify({ sections: referralData }));
+      formData.append("deletedImage", deletedImage.toString());
       if (heroImage) {
         formData.append("image", heroImage);
       }
@@ -58,6 +70,7 @@ const CMSReferral = () => {
       await updateReferral(formData).unwrap();
       messageApi.success("Referral settings updated successfully!");
       setHeroImage(null);
+      setDeletedImage(false);
     } catch (error) {
       messageApi.error(error?.data?.message || "Failed to update referral settings");
     }
@@ -65,8 +78,15 @@ const CMSReferral = () => {
 
   const handleHeroImageUpload = (info) => {
     if (info.file.status === "done") {
+      // Revoke previous object URL if exists
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
       setHeroImage(info.file.originFileObj);
-      setHeroImageUrl(URL.createObjectURL(info.file.originFileObj));
+      const newUrl = URL.createObjectURL(info.file.originFileObj);
+      objectUrlRef.current = newUrl;
+      setHeroImageUrl(newUrl);
+      setDeletedImage(false);
       messageApi.success("Image selected successfully!");
     }
   };
@@ -180,8 +200,13 @@ const CMSReferral = () => {
                           danger
                           icon={<DeleteOutlined />}
                           onClick={() => {
+                            if (objectUrlRef.current) {
+                              URL.revokeObjectURL(objectUrlRef.current);
+                              objectUrlRef.current = null;
+                            }
                             setHeroImage(null);
                             setHeroImageUrl("");
+                            setDeletedImage(true);
                           }}
                         />
                       </div>

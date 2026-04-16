@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   Tabs,
@@ -22,6 +22,7 @@ const CMSMembership = () => {
 
   const [mainImage, setMainImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const objectUrlRef = useRef(null);
 
   const [sections, setSections] = useState({
     hero: {
@@ -66,6 +67,15 @@ const CMSMembership = () => {
     }
   });
 
+  // Cleanup object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
+
   // Load data from API when available
   useEffect(() => {
     if (membershipDataFromApi?.sections) {
@@ -97,8 +107,14 @@ const CMSMembership = () => {
 
   const handleMainImageUpload = (info) => {
     if (info.file.status === "done") {
+      // Revoke previous object URL if exists
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
       setMainImage(info.file.originFileObj);
-      setImageUrl(URL.createObjectURL(info.file.originFileObj));
+      const newUrl = URL.createObjectURL(info.file.originFileObj);
+      objectUrlRef.current = newUrl;
+      setImageUrl(newUrl);
       messageApi.success("Image selected successfully!");
     }
   };
@@ -239,9 +255,13 @@ const CMSMembership = () => {
               <Button icon={<UploadOutlined />}>Select Image File</Button>
             </Upload>
             {imageUrl && (
-              <Button 
-                danger 
+              <Button
+                danger
                 onClick={() => {
+                  if (objectUrlRef.current) {
+                    URL.revokeObjectURL(objectUrlRef.current);
+                    objectUrlRef.current = null;
+                  }
                   setMainImage(null);
                   setImageUrl("");
                 }}
