@@ -47,7 +47,7 @@ const UserTable = () => {
           render: (text) => (
         <div className="flex items-center gap-3">
       
-          <span>{ text.split('T')[0]}</span>
+          <span>{ text?.split('T')[0]}</span>
         </div>
       ),
     },
